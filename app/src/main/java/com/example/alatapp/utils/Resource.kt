@@ -1,0 +1,18 @@
+package com.example.moviesappcompose.utils
+
+sealed class Resource<T> (
+    val data: T? = null,
+    val message: String? = null
+){
+    class Success<T>(data: T) : Resource<T>(data)
+    class Error<T>(message: String?) : Resource<T>(null, message)
+    class Loading<T>(val isLoading: Boolean = true): Resource<T>(null)
+}
+
+enum class ThemeMode(
+    val value: String
+){
+    LIGHT(""),
+    DART("Light"),
+    SYSTEM_DEFAULT("System Default")
+}
