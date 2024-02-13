@@ -15,3 +15,6 @@ val lightRed = Color(0xF0FCE6E4)
 val transparentGrey = Color(0xFFEEEFF0)
 
 val disabledBtnColor = Color(0xF0AC645E)
+
+val AlatRed = Color(0XFF6B214A)
+val AlayYellow = Color(0XFFFF9900)

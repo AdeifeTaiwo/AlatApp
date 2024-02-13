@@ -53,6 +53,7 @@ class CountryRepositoryImpl @Inject constructor(
                 } catch (e: HttpException) {
                     e.printStackTrace()
                     emit(Resource.Error(message = "Please Check your internet"))
+                    e.response()?.errorBody()
 
                 } catch (e: IOException) {
                     e.printStackTrace()

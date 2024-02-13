@@ -364,12 +364,16 @@ fun AlatCustomLoader(pulseFraction: Float = 1.2f, content: @Composable () -> Uni
         animationSpec = infiniteRepeatable(animation = tween(1000),
             repeatMode = RepeatMode.Reverse), label = ""
     )
-    Surface(modifier = Modifier.fillMaxSize(), color = Color.White .copy(alpha = 0.6f)) {
+    Column(modifier = Modifier.fillMaxSize().background( color = Color.White.copy(alpha = 0.2f))) {
 
         Box(contentAlignment = Alignment.Center,
-            modifier = Modifier.scale(scale)){
+            modifier = Modifier.fillMaxSize().scale(scale)){
+            CircularProgressbar3(modifier = Modifier.scale(scale))
             content()
-            CircularProgressbar3()
+            Canvas(modifier = Modifier.background(color = Color.DarkGray.copy(0.1f)).fillMaxSize(),){}
+
+
+
         }
     }
 
@@ -388,13 +392,14 @@ fun PreviewFlippedCard(){
 
 @Composable
 fun CircularProgressbar3(
+    modifier: Modifier =Modifier,
     number: Float = 70f,
     numberStyle: TextStyle = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Bold,
         fontSize = 28.sp
     ),
-    size: Dp = 100.dp,
+    size: Dp = 70.dp,
     indicatorThickness: Dp = 9.dp,
     animationDuration: Int = 1000,
     animationDelay: Int = 0,
@@ -437,6 +442,7 @@ fun CircularProgressbar3(
             )
         ), label = ""
     )
+    CircularProgressIndicator()
     // How far forward (degrees) the base point should be from the start point
     val baseRotation by transition.animateFloat(
         0f,
@@ -501,7 +507,7 @@ fun CircularProgressbar3(
             //val offset = StartAngleOffset + currentRotationAngleOffset + baseRotation
             this.drawIndeterminateCircularIndicator(startAngle + offset, indicatorThickness, sweep, foregroundIndicatorColor, Stroke(indicatorThickness.toPx(), cap = StrokeCap.Round))
         }
-        Image(painter = painterResource(id = R.drawable.ic_alat_logo), contentDescription = null )
+        Image(modifier = Modifier.size(30.dp),painter = painterResource(id = R.drawable.ic_alat_logo), contentDescription = null )
     }
 
 }

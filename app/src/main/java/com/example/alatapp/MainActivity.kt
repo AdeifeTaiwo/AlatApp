@@ -11,6 +11,7 @@ import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -57,6 +58,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -85,6 +87,8 @@ import com.example.alatapp.welcomescreen.presentation.Country
 import com.example.alatapp.welcomescreen.presentation.CountryItem
 import com.example.alatapp.welcomescreen.presentation.WelcomeScreenState
 import com.example.alatapp.welcomescreen.presentation.WelcomeScreenViewModel
+import com.example.alatapp.welcomescreen.presentation.animations.AlatCustomLoader
+import com.example.alatapp.welcomescreen.presentation.animations.CircularProgressbar3
 import com.example.alatapp.welcomescreen.presentation.component.ScrollContent
 import com.example.alatapp.welcomescreen.presentation.component.WelcomeScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -289,7 +293,7 @@ fun AlatNavHost(
 
 
         composable(route = AlatScreenRoute.EmptyScreen.route) {
-            val welcomeScreenViewModel : WelcomeScreenViewModel = hiltViewModel()
+            val welcomeScreenViewModel: WelcomeScreenViewModel = hiltViewModel()
             val uiState = welcomeScreenViewModel.countryListState.collectAsState().value
             EmptyScreen(uiState)
         }
@@ -306,35 +310,40 @@ fun EmptyScreen(uiState: WelcomeScreenState) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        
+
         val items = listOf<Country>(
             Country(countryName = "Nigeria", phoneNumber = "+234")
         )
 
-        if(uiState.isLoading){
-            Box {
-                CircularProgressIndicator()
-            }
-        }
-        
-        if(uiState.countryCodeWithFlagList.isNotEmpty()){
-            LazyColumn(){
-                items(
-                    count = uiState.countryCodeWithFlagList.size,
-                ){
-                    CountryItem(item = uiState.countryCodeWithFlagList[it]) {
-                        
+        Surface(modifier = Modifier.fillMaxSize(), color = Color.White.copy(alpha = 0.2f)) {
+
+            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+
+                if (uiState.isLoading) {
+                    AlatCustomLoader {}
+                }
+                if (uiState.countryCodeWithFlagList.isNotEmpty()) {
+                    LazyColumn() {
+                        items(
+                            count = uiState.countryCodeWithFlagList.size,
+                        ) {
+                            CountryItem(item = uiState.countryCodeWithFlagList[it]) {
+
+                            }
+                        }
                     }
                 }
+
+                if (uiState.hasError) {
+                    Box {
+                        Text(text = uiState.errorMessage)
+                    }
+                }
+
             }
         }
-        
-        if(uiState.hasError)
-        {
-            Box {
-                Text(text = uiState.errorMessage)
-            }
-        }
+
+
 
         Row(modifier = Modifier) {
             Box(modifier = Modifier.fillMaxWidth()) {
