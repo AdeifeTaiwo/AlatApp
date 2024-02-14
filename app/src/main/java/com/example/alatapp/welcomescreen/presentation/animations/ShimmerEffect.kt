@@ -31,6 +31,18 @@ import com.example.alatapp.ui.theme.AlatAppTheme
 import com.example.alatapp.ui.theme.transparentGrey
 
 
+/**
+ * a method to add shimmer effect animation in
+ * using an InfiniteTransition(Label = ""), with initial
+ * Float Value of 0.2f and target Value of 0.9F and
+ * Background Color of LightGray
+ *
+ */
+
+
+/**
+ * Shimmer Effect for NewsList Items
+ */
 @Composable
 fun NewsCardShimmerEffect(modifier: Modifier = Modifier) {
 

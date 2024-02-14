@@ -76,24 +76,14 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import androidx.core.view.WindowInsetsControllerCompat
 import com.example.alatapp.ui.theme.transparentGrey
+import com.example.alatapp.welcomescreen.presentation.AlatThePlaceScreen
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import java.lang.Math.abs
 import kotlin.math.PI
 
 
-/**
- * a method to add shimmer effect animation in
- * using an InfiniteTransition(Label = ""), with initial
- * Float Value of 0.2f and target Value of 0.9F and
- * Background Color of LightGray
- *
- */
 
-
-/**
- * Shimmer Effect for NewsList Items
- */
 
 
 @Composable
@@ -129,13 +119,16 @@ fun AlatCustomLoader(pulseFraction: Float = 1.2f, content: @Composable () -> Uni
                 .fillMaxSize()
                 .clickable(enabled = false) { }) {
 
+            content()
+            AlatThePlaceScreen()
             Canvas(
                 modifier = Modifier
-                    .background(color = Color.DarkGray.copy(0.2f))
+                    .background(color = Color.Black.copy(0.6f))
                     .clickable(false) {}
                     .fillMaxSize(),
             ) {}
             CircularProgressbar3(modifier = Modifier)
+
 
         }
     }
@@ -149,7 +142,6 @@ fun AlatCustomLoader(pulseFraction: Float = 1.2f, content: @Composable () -> Uni
 fun PreviewAlatLoader(){
     AlatAppTheme {
         AlatCustomLoader {
-
         }
     }
 }
@@ -282,12 +274,13 @@ fun CircularProgressbar3(
         val infiniteTransition = rememberInfiniteTransition()
         val scale by infiniteTransition.animateFloat(
             initialValue = 1f,
-            targetValue = 1.4f,
+            targetValue = 1.7f,
             animationSpec = infiniteRepeatable(
                 animation = tween(1000),
                 repeatMode = RepeatMode.Reverse
             ), label = ""
         )
+
         Image(
             modifier = Modifier
                 .size(30.dp)

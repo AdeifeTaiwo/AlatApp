@@ -121,14 +121,7 @@ class MainActivity : ComponentActivity() {
     }
 
 
-    @Composable
-    private fun setBarColor(color: Color) {
-        val systemUiController = rememberSystemUiController()
-        LaunchedEffect(key1 = color, block = {
-            systemUiController.setSystemBarsColor(color)
-        })
-    }
-    //f767e0d619672aa5579798ada55dca3f api key,:  language, page, api_key
+
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -370,6 +363,14 @@ fun EmptyScreen(uiState: WelcomeScreenState) {
     }
 }
 
+@Composable
+private fun setBarColor(color: Color) {
+    val systemUiController = rememberSystemUiController()
+    LaunchedEffect(key1 = color, block = {
+        systemUiController.setSystemBarsColor(color)
+    })
+}
+//f767e0d619672aa5579798ada55dca3f api key,:  language, page, api_key
 
 @Composable
 fun AlatHomeScreen(modifier: Modifier = Modifier) {
