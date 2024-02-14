@@ -4,13 +4,17 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -24,9 +28,12 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.alatapp.R
 import com.example.alatapp.ui.theme.AlatAppTheme
 import kotlin.math.abs
@@ -46,10 +53,11 @@ fun AlatGradientBackground() {
 
     BoxWithConstraints(
         modifier = Modifier
+            .clip(RoundedCornerShape(10.dp))
             .height(156.dp)
             .width(400.dp)
             .background(Color(0XFF6B214A))
-            .clip(RoundedCornerShape(10.dp))
+
     ) {
 
         val width = constraints.maxWidth
@@ -99,8 +107,8 @@ fun AlatGradientBackground() {
 
         Canvas(
             modifier = Modifier
-                .fillMaxSize()
                 .clip(RoundedCornerShape(8.dp))
+                .fillMaxSize()
         ) {
             drawRect(brush)
             drawPath(
@@ -123,19 +131,22 @@ fun AlatGradientBackground() {
             color = Color.White
         )
 
-        Row(modifier = Modifier
-            .padding(start = 8.dp, bottom = 16.dp)
-            .align(Alignment.BottomStart),
+        Row(
+            modifier = Modifier
+                .padding(start = 8.dp, bottom = 16.dp)
+                .align(Alignment.BottomStart),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(0.dp)){
+            horizontalArrangement = Arrangement.spacedBy(0.dp)
+        ) {
 
             Text(
                 text = "Open",
                 color = Color.White
             )
-            Icon(modifier = Modifier
-                .padding(top = 2.dp)
-                .size(16.dp),
+            Icon(
+                modifier = Modifier
+                    .padding(top = 2.dp)
+                    .size(16.dp),
                 imageVector = Icons.Default.KeyboardArrowRight, contentDescription = "",
                 tint = Color.White
             )
@@ -156,4 +167,58 @@ fun Path.standardQuadFromTo(from: Offset, to: Offset) {
         abs(from.x + to.x) / 2f,
         abs(from.y + to.y) / 2f
     )
+}
+
+@Composable
+fun AlatThePlaceScreen() {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 24.dp, vertical = 21.dp)
+            .fillMaxSize()
+    ) {
+        Row(
+            modifier = Modifier.padding(top = 10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Box(modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape)) {
+                Image(
+                    modifier = Modifier.size(40.dp),
+                    painter = painterResource(id = R.drawable.avatar), contentDescription = "",
+                    contentScale = ContentScale.Crop
+                )
+            }
+
+            Text(text = "Hello, The Place", fontWeight = FontWeight.W600, fontSize = 20.sp)
+        }
+
+        Text(
+            modifier = Modifier.padding(top = 16.dp),
+            color = Color(0XFF808080),
+            text = "What would you like to do today?",
+            fontWeight = FontWeight.W400,
+            fontSize = 14.sp
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        repeat(3){
+            AlatGradientBackground()
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+
+
+    }
+}
+
+
+@Composable
+@Preview(showBackground = true)
+fun PreviewAlatThePlaceScreen() {
+    AlatAppTheme {
+        AlatThePlaceScreen()
+    }
+
 }

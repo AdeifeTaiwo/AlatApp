@@ -32,7 +32,6 @@ import com.example.alatapp.ui.theme.AlatAppTheme
 import com.example.alatapp.ui.theme.faintRed
 import com.example.alatapp.ui.theme.lightRed
 import com.example.alatapp.welcomescreen.data.remote.CountryCodeAndFlagItem
-import com.example.alatapp.welcomescreen.presentation.component.ReusableAlatText
 
 
 @Composable

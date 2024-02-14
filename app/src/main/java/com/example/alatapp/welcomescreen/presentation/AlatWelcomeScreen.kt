@@ -1,4 +1,4 @@
-package com.example.alatapp.welcomescreen.presentation.component
+package com.example.alatapp.welcomescreen.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -9,39 +9,24 @@ import androidx.compose.foundation.layout.Column
 
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.consumedWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,27 +37,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.ImageLoader
-import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import coil.size.Size
 import com.example.alatapp.R
 import com.example.alatapp.ui.theme.AlatAppTheme
+import com.example.alatapp.welcomescreen.presentation.component.AlatRedBackgroundButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,32 +72,18 @@ fun WelcomeScreen(
             .build()
     )
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxSize()
-            .padding(
-                start = 17.dp,
-                end = 24.dp
-            ),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-
+    Column {
+        ScrollContent()
     }
-
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-
-    ScrollContent(PaddingValues(0.dp))
 
 }
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ScrollContent(innerPadding: PaddingValues) {
+fun ScrollContent() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(innerPadding)
             .padding(horizontal = 16.dp)
     ) {
         Box(
@@ -147,9 +114,7 @@ fun ScrollContent(innerPadding: PaddingValues) {
         Spacer(modifier = Modifier.height(16.dp))
         ReusableAlatText(fontWeight = FontWeight.W500, text = "Phone Number", fontSize = 14.sp)
 
-        Row() {
-
-        }
+        Row() {}
 
         val focusRequester = remember { FocusRequester() }
         var searchText by remember { mutableStateOf("") }

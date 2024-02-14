@@ -4,19 +4,12 @@ import com.example.alatapp.R
 import com.example.alatapp.ui.theme.AlatAppTheme
 
 
-import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.CubicBezierEasing
-import androidx.compose.animation.core.EaseInBounce
-import androidx.compose.animation.core.EaseOutBounce
-import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloat
@@ -63,13 +56,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -83,7 +72,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
+import androidx.core.view.WindowInsetsControllerCompat
 import com.example.alatapp.ui.theme.transparentGrey
+import com.google.accompanist.systemuicontroller.SystemUiController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import java.lang.Math.abs
 import kotlin.math.PI
 
@@ -97,282 +91,51 @@ import kotlin.math.PI
  */
 
 
-
-
 /**
  * Shimmer Effect for NewsList Items
  */
-@Composable
-fun NewsCardShimmerEffect(modifier: Modifier = Modifier) {
 
-    Card(
-        modifier = Modifier
-            .graphicsLayer {}
-            .height(200.dp)
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
-            .background(color = Color.Transparent)
-            .padding(horizontal = 4.dp, vertical = 4.dp),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent
-        ),
-        border = BorderStroke(1.dp, color = transparentGrey),
-        elevation = CardDefaults.outlinedCardElevation(
-            pressedElevation = 8.dp
-        )
-
-    ) {
-        Row() {
-
-            Box(modifier = Modifier.weight(.42f)) {
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .fillMaxHeight(1.0f)
-                        .fillMaxWidth()
-                        .shimmerEffect()
-                )
-            }
-
-            Column(
-                modifier = Modifier
-                    .weight(.55f)
-                    .padding(top = 8.dp)
-                    .fillMaxHeight(),
-                verticalArrangement = Arrangement.SpaceAround
-            ) {
-
-                Box(
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .fillMaxWidth()
-                        .height(25.dp)
-                        .shimmerEffect(),
-                )
-
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start,
-                    modifier = Modifier.padding(horizontal = 4.dp)
-                ) {
-                    Box(
-                        modifier = modifier
-                            .clip(CircleShape)
-                            .size(32.dp)
-                            .shimmerEffect()
-                    )
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(8.dp))
-                            .width(40.dp)
-                            .height(32.dp)
-                            .shimmerEffect()
-                    )
-
-                    Spacer(modifier = Modifier.width(18.dp))
-
-                    Box(
-                        modifier = Modifier
-                            .height(32.dp)
-                            .width(60.dp)
-                            .shimmerEffect()
-                            .clip(
-                                RoundedCornerShape(32.dp)
-                            )
-                    )
-                }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .height(20.dp)
-                            .width(30.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .shimmerEffect()
-                    )
-
-                    Box(
-                        modifier = Modifier
-                            .height(20.dp)
-                            .width(30.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .shimmerEffect()
-                    )
-
-                    Box(
-                        modifier = Modifier
-                            .height(20.dp)
-                            .width(30.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .shimmerEffect()
-                    )
-                }
-
-            }
-
-
-        }
-
-    }
-
-}
 
 @Composable
-fun AnimateVisibility_() {
-    var isVisible by remember { mutableStateOf(true) }
-    val density = LocalDensity.current
-    Column {
+fun AlatCustomLoader(pulseFraction: Float = 1.2f, content: @Composable () -> Unit) {
 
-        val enabled by  remember{ mutableStateOf(false) }
-        val alpha: Float by animateFloatAsState(
-            targetValue = if (enabled) 1f else 0.5f,
-            // Configure the animation duration and easing.
-            animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing), label = ""
-        )
+    val systemUiController: SystemUiController = rememberSystemUiController()
+    systemUiController.isStatusBarVisible = false // Status bar
 
-        var animate by remember {
-            mutableStateOf(false)
-        }
-
-
-        val size = animateDpAsState(
-            targetValue =  if (animate) 50.dp else 8.dp, label = "",
-            animationSpec = spring(
-                dampingRatio = Spring.DampingRatioHighBouncy,
-                stiffness = Spring.StiffnessMediumLow
-            )
-        )
-
-
-
-        AnimatedVisibility(
-            visible = isVisible,
-            enter = slideInVertically(
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioHighBouncy,
-                    stiffness = Spring.StiffnessLow
-                )
-            ),
-            exit = slideOutVertically(
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioHighBouncy,
-                    stiffness = Spring.StiffnessLow
-                )
-            )
-        ) {
-            Surface(
-                modifier = Modifier
-                    .height(100.dp)
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(8.dp))
-                    .padding(horizontal = 4.dp),
-                color = Color.Green
-
-            ) {
-                Column {
-
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-        Surface(
-            modifier = Modifier
-                .height(100.dp)
-                .padding(horizontal = size.value)
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(size.value))
-                .background(color = Color.Blue)
-                .clickable {
-                    animate = !animate
-                },
-            color = Color.Blue
-
-        ) {
-            Column {
-
-            }
-        }
-    }
-
-}
-
-@Composable
-fun FlipCardDemo() {
-    var flipped by remember { mutableStateOf(false) }
-    val rotationZ by animateFloatAsState(targetValue = if (flipped) 270f else 0f, label = "",
-        animationSpec = tween(durationMillis = 2000)
-    )
-    val translationX by animateFloatAsState(targetValue = if (flipped) 150f else 0f, label = "",
-        animationSpec = tween(durationMillis = 2000)
-    )
-
-    val scaleX by animateFloatAsState(targetValue = if (flipped) 1.2f else 1f, label = "",
-        animationSpec = tween(durationMillis = 2000)
-    )
-    val scaleY by animateFloatAsState(targetValue = if (flipped) 1.2f else 1f, label = "",
-        animationSpec = tween(durationMillis = 2000)
-    )
-
-    AlatCustomLoader {
-
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Card(
-                modifier = Modifier
-                    .graphicsLayer {
-
-                        cameraDistance = 12f * density
-                        shadowElevation = if (flipped) 0f else 30f
-                        alpha = if (flipped) 0.1f else 0.1f
-                        this.scaleY = scaleX
-                        this.scaleX = scaleY
-
-                    }
-                    .clickable { flipped = !flipped }
-                    .width(300.dp)
-                    .height(200.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.DarkGray,
-                )
-            ) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("Hey bro", color = Color.White, fontSize = 32.sp)
-                }
-            }
-        }
-
-    }
-}
-@Composable
-fun AlatCustomLoader(pulseFraction: Float = 1.2f, content: @Composable () -> Unit ) {
-
+    //systemUiController.isNavigationBarVisible = false // Navigation bar
+    //systemUiController.isSystemBarsVisible = false // Status & Navigation bars
+    systemUiController.systemBarsBehavior =
+        WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
     val infiniteTransition = rememberInfiniteTransition()
 
     val scale by infiniteTransition.animateFloat(
         initialValue = 1f,
         targetValue = pulseFraction,
-        animationSpec = infiniteRepeatable(animation = tween(1000),
-            repeatMode = RepeatMode.Reverse), label = ""
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000),
+            repeatMode = RepeatMode.Reverse
+        ), label = ""
     )
-    Column(modifier = Modifier.fillMaxSize().background( color = Color.White.copy(alpha = 0.2f))) {
+    Popup(
+        alignment = Alignment.TopStart,
+        properties = PopupProperties(
+            excludeFromSystemGesture = false,
+            clippingEnabled = true
+        )
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable(enabled = false) { }) {
 
-        Box(contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize().scale(scale)){
-            CircularProgressbar3(modifier = Modifier.scale(scale))
-            content()
-            Canvas(modifier = Modifier.background(color = Color.DarkGray.copy(0.1f)).fillMaxSize(),){}
-
-
+            Canvas(
+                modifier = Modifier
+                    .background(color = Color.DarkGray.copy(0.2f))
+                    .clickable(false) {}
+                    .fillMaxSize(),
+            ) {}
+            CircularProgressbar3(modifier = Modifier)
 
         }
     }
@@ -381,18 +144,21 @@ fun AlatCustomLoader(pulseFraction: Float = 1.2f, content: @Composable () -> Uni
 }
 
 
-@Preview()
 @Composable
-fun PreviewFlippedCard(){
+@Preview
+fun PreviewAlatLoader(){
     AlatAppTheme {
-        FlipCardDemo()
+        AlatCustomLoader {
 
+        }
     }
 }
 
+
+
 @Composable
 fun CircularProgressbar3(
-    modifier: Modifier =Modifier,
+    modifier: Modifier = Modifier,
     number: Float = 70f,
     numberStyle: TextStyle = TextStyle(
         fontFamily = FontFamily.Default,
@@ -404,7 +170,7 @@ fun CircularProgressbar3(
     animationDuration: Int = 1000,
     animationDelay: Int = 0,
     foregroundIndicatorColor: Color = Color.Red,
-    backgroundIndicatorColor: Color = Color.Gray, numberR: Float= 10f
+    backgroundIndicatorColor: Color = Color(0XFFB2214A), numberR: Float = 10f
 ) {
     // It remembers the number value
     // var numberR by remember {
@@ -479,14 +245,14 @@ fun CircularProgressbar3(
     )
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
+        modifier = modifier
             .size(size = size)
     ) {
         Box(
-            modifier = Modifier
+            modifier = modifier
                 .size(100.dp)
                 .clip(CircleShape)
-                .background(Color(0xFFD9D9D9))
+                .background(Color(0xFFFFFFFF))
         )
         Canvas(
             modifier = Modifier
@@ -505,9 +271,31 @@ fun CircularProgressbar3(
             // Offset by the constant offset and the per rotation offset
             val offset = StartAngleOffset + currentRotationAngleOffset + baseRotation
             //val offset = StartAngleOffset + currentRotationAngleOffset + baseRotation
-            this.drawIndeterminateCircularIndicator(startAngle + offset, indicatorThickness, sweep, foregroundIndicatorColor, Stroke(indicatorThickness.toPx(), cap = StrokeCap.Round))
+            this.drawIndeterminateCircularIndicator(
+                startAngle + offset,
+                indicatorThickness,
+                sweep,
+                foregroundIndicatorColor,
+                Stroke(indicatorThickness.toPx(), cap = StrokeCap.Round)
+            )
         }
-        Image(modifier = Modifier.size(30.dp),painter = painterResource(id = R.drawable.ic_alat_logo), contentDescription = null )
+        val infiniteTransition = rememberInfiniteTransition()
+        val scale by infiniteTransition.animateFloat(
+            initialValue = 1f,
+            targetValue = 1.4f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(1000),
+                repeatMode = RepeatMode.Reverse
+            ), label = ""
+        )
+        Image(
+            modifier = Modifier
+                .size(30.dp)
+                .scale(scale)
+                .padding(4.dp),
+            painter = painterResource(id = R.drawable.ic_alat_logo),
+            contentDescription = null
+        )
     }
 
 }
@@ -547,7 +335,7 @@ fun DrawScope.drawCircularIndicator(
 ) {
 
     drawArc(
-        color = color,
+        color = Color(0XFF6B214A),
         startAngle = adjustedStartAngle,
         sweepAngle = adjustedSweep,
         style = stroke,
@@ -558,19 +346,3 @@ fun DrawScope.drawCircularIndicator(
 
 }
 
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewAnimatedVisibility() {
-    AlatAppTheme {
-        AnimateVisibility_()
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ShimmerEffectPreview() {
-    AlatAppTheme {
-        NewsCardShimmerEffect()
-    }
-}

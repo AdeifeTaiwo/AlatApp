@@ -153,6 +153,9 @@ dependencies {
 
     implementation("com.airbnb.android:lottie-compose:4.0.0")
 
+    //splash screen impl
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
 
 
 }

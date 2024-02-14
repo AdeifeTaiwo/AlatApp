@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -18,9 +21,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.alatapp.R
 import com.example.alatapp.ui.theme.AlatAppTheme
+import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen() {
+fun SplashScreen(onTimeout: () -> Unit, modifier: Modifier = Modifier) {
+
+    val currentOnTimeout by rememberUpdatedState(onTimeout)
+
+    // Create an effect that matches the lifecycle of LandingScreen.
+    // If LandingScreen recomposes or onTimeout changes,
+    // the delay shouldn't start again.
+    LaunchedEffect(Unit) {
+        delay(2000)
+        currentOnTimeout()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -43,6 +58,6 @@ fun SplashScreen() {
 @Composable
 fun PreviewSplashScreen(){
     AlatAppTheme {
-        SplashScreen()
+        SplashScreen({})
     }
 }

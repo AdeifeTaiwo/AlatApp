@@ -1,27 +1,23 @@
 package com.example.alatapp
 
 import android.content.res.Configuration
-import android.graphics.Paint.Style
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -33,11 +29,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FoodBank
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Movie
-import androidx.compose.material.icons.filled.Upcoming
 import androidx.compose.material.icons.filled.Wallet
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -51,17 +43,18 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -71,15 +64,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import coil.imageLoader
 import com.example.alatapp.core.AlatScreenRoute
 import com.example.alatapp.welcomescreen.presentation.component.AlatRedBackgroundButton
 import com.example.alatapp.ui.theme.AlatAppTheme
@@ -88,31 +79,56 @@ import com.example.alatapp.welcomescreen.presentation.CountryItem
 import com.example.alatapp.welcomescreen.presentation.WelcomeScreenState
 import com.example.alatapp.welcomescreen.presentation.WelcomeScreenViewModel
 import com.example.alatapp.welcomescreen.presentation.animations.AlatCustomLoader
-import com.example.alatapp.welcomescreen.presentation.animations.CircularProgressbar3
-import com.example.alatapp.welcomescreen.presentation.component.ScrollContent
-import com.example.alatapp.welcomescreen.presentation.component.WelcomeScreen
+import com.example.alatapp.welcomescreen.presentation.ScrollContent
+import com.example.alatapp.welcomescreen.presentation.WelcomeScreen
+import com.example.alatapp.welcomescreen.presentation.splash.SplashScreen
+import com.example.alatapp.welcomescreen.presentation.splash.SplashViewModel
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.format.TextStyle
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
+    private val viewModel: SplashViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        val splashScreen = installSplashScreen()
+        splashScreen.setKeepOnScreenCondition {
+            viewModel.showSplashScreen.value
+        }
+
         setContent {
             AlatAppTheme {
                 // A surface container using the 'background' color from the theme
+
+                var showLandingScreen by remember { mutableStateOf(true) }
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    if (showLandingScreen) {
+                        SplashScreen(onTimeout = { showLandingScreen = false })
+                    } else {
+                        HomeScreen2()
+                    }
 
-                    HomeScreen2()
                 }
             }
         }
     }
 
+
+    @Composable
+    private fun setBarColor(color: Color) {
+        val systemUiController = rememberSystemUiController()
+        LaunchedEffect(key1 = color, block = {
+            systemUiController.setSystemBarsColor(color)
+        })
+    }
+    //f767e0d619672aa5579798ada55dca3f api key,:  language, page, api_key
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -144,10 +160,10 @@ class MainActivity : ComponentActivity() {
                     },
                     navigationIcon = {
                         AnimatedVisibility(
-                            visible = showBottomBar.value,
+                            visible = true,
                             enter = slideInVertically(
                                 animationSpec = TweenSpec(
-                                    durationMillis = 5000,
+                                    durationMillis = 1000,
                                     delay = 4
                                 )
                             ),
@@ -233,8 +249,6 @@ class MainActivity : ComponentActivity() {
 
 
             items.forEachIndexed { index, bottomItem ->
-
-
                 NavigationBarItem(
                     selected = selected.intValue == index,
                     onClick = {
@@ -247,9 +261,7 @@ class MainActivity : ComponentActivity() {
                             tint = Color.Red
                         )
                     },
-
-
-                    )
+                )
             }
         }
 
@@ -320,8 +332,11 @@ fun EmptyScreen(uiState: WelcomeScreenState) {
             Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
 
                 if (uiState.isLoading) {
-                    AlatCustomLoader {}
+                    AlatCustomLoader {
+                        ScrollContent()
+                    }
                 }
+
                 if (uiState.countryCodeWithFlagList.isNotEmpty()) {
                     LazyColumn() {
                         items(
