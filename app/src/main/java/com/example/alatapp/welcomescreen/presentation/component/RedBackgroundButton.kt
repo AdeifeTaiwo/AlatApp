@@ -50,7 +50,7 @@ fun AlatRedBackgroundButton(
 
     Button(
         shape = RoundedCornerShape(8.dp),
-        border = BorderStroke(2.dp, Color.Red),
+        border = BorderStroke(2.dp, Color(0XFFA90836)),
 
         modifier = modifier
             .pointerInput(buttonState) {

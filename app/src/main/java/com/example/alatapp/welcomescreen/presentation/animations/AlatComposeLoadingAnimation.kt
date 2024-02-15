@@ -50,6 +50,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -79,6 +80,7 @@ import com.example.alatapp.ui.theme.transparentGrey
 import com.example.alatapp.welcomescreen.presentation.AlatThePlaceScreen
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import kotlinx.coroutines.delay
 import java.lang.Math.abs
 import kotlin.math.PI
 
@@ -120,13 +122,21 @@ fun AlatCustomLoader(pulseFraction: Float = 1.2f, content: @Composable () -> Uni
                 .clickable(enabled = false) { }) {
 
             content()
-            Canvas(
-                modifier = Modifier
-                    .background(color = Color.Black.copy(0.6f))
-                    .clickable(false) {}
-                    .fillMaxSize(),
-            ) {}
-            CircularProgressbar3(modifier = Modifier)
+            val showLoader = remember{ mutableStateOf(true) }
+            LaunchedEffect(key1 = Unit, block = {
+                delay(4000)
+                showLoader.value = false
+            })
+
+            if(showLoader.value) {
+                Canvas(
+                    modifier = Modifier
+                        .background(color = Color.Black.copy(0.6f))
+                        .clickable(false) {}
+                        .fillMaxSize(),
+                ) {}
+                CircularProgressbar3(modifier = Modifier)
+            }
 
 
         }
