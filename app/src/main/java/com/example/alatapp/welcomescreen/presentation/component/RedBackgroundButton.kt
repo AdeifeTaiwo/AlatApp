@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
@@ -47,7 +48,7 @@ fun AlatRedBackgroundButton(
     })
 
 
-    OutlinedButton(
+    Button(
         shape = RoundedCornerShape(8.dp),
         border = BorderStroke(2.dp, Color.Red),
 
@@ -64,7 +65,7 @@ fun AlatRedBackgroundButton(
                 }
             }
             .fillMaxWidth()
-            .padding(vertical = 32.dp, horizontal = 32.dp)
+            .padding(vertical = 32.dp, horizontal = 0.dp)
             .height(48.dp)
             .graphicsLayer {
                   scaleX = scale
@@ -73,7 +74,7 @@ fun AlatRedBackgroundButton(
         interactionSource = interactionSource,
         onClick = {  },
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Red
+            containerColor = Color(0XFFA90836)
         )
     ) {
         Text(text = text, color = Color.White)

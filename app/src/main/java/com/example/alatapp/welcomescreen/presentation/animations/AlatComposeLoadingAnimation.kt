@@ -120,7 +120,6 @@ fun AlatCustomLoader(pulseFraction: Float = 1.2f, content: @Composable () -> Uni
                 .clickable(enabled = false) { }) {
 
             content()
-            AlatThePlaceScreen()
             Canvas(
                 modifier = Modifier
                     .background(color = Color.Black.copy(0.6f))

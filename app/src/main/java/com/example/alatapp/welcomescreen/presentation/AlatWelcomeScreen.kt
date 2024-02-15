@@ -217,11 +217,13 @@ fun ReusableAlatText(
     modifier: Modifier = Modifier,
     fontSize: TextUnit = 20.sp,
     fontWeight: FontWeight,
-    text: String
+    text: String,
+    color: Color = Color.White
 ) {
     Text(
+        modifier = modifier,
         text = text,
-        style = TextStyle(fontWeight = fontWeight, fontSize = fontSize)
+        style = TextStyle(fontWeight = fontWeight, fontSize = fontSize, color = color)
     )
 }
 

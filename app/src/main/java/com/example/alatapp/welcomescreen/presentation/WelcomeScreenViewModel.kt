@@ -38,7 +38,6 @@ class WelcomeScreenViewModel @Inject constructor(
                                     it.copy(
                                         isLoading = false,
                                         countryCodeWithFlagList = countryList?: emptyList(),
-
                                     )
                                 }
                             }
